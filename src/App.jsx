@@ -18,6 +18,7 @@ export default function App() {
     direction: 'asc' 
   });
 
+  // Format currency in Kenyan Shillings
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-KE', {
       style: 'currency',
@@ -26,6 +27,7 @@ export default function App() {
     }).format(amount);
   };
 
+  // Add new expense
   const handleAddExpense = (newExpense) => {
     setExpenses(prev => [
       ...prev,
@@ -38,16 +40,19 @@ export default function App() {
     ]);
   };
 
+  // Delete expense with confirmation
   const handleDeleteExpense = (id) => {
     if (window.confirm('Are you sure you want to delete this expense?')) {
       setExpenses(prev => prev.filter(expense => expense.id !== id));
     }
   };
 
+  // Handle search input
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value.toLowerCase());
   };
 
+  // Handle column sorting
   const handleSort = (key) => {
     let direction = 'asc';
     if (sortConfig.key === key && sortConfig.direction === 'asc') {
@@ -56,6 +61,7 @@ export default function App() {
     setSortConfig({ key, direction });
   };
 
+  // Process and sort expenses
   const processedExpenses = [...expenses]
     .filter(expense => 
       expense.name.toLowerCase().includes(searchTerm) || 
@@ -76,23 +82,26 @@ export default function App() {
       return 0;
     });
 
+  // Calculate total expenses
   const totalExpenses = processedExpenses.reduce((sum, expense) => sum + expense.amount, 0);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
-      <div className="max-w-7xl mx-auto"> {/* Increased max-width */}
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
         <header className="mb-6 text-center">
-          <h1 className="text-3xl font-bold text-green-800 mb-1">PesaTracker</h1>
-          <p className="text-green-600 text-sm">Track your spending the Kenyan way</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-green-800 mb-1">PesaTracker</h1>
+          <p className="text-green-600 text-sm md:text-base">Track your spending the Kenyan way</p>
           <div className="mt-3 p-2 bg-white rounded-lg shadow-inner border border-green-100 inline-block">
             <span className="font-medium text-gray-700">Total: </span>
             <span className="font-bold text-green-700">{formatCurrency(totalExpenses)}</span>
           </div>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6"> {/* Changed to 5-column grid */}
-          {/* Add Expense Form - Now takes 2/5 of space */}
-          <div className="lg:col-span-2 bg-white p-5 rounded-lg shadow-md border border-green-100">
+        {/* Main Content - Flex layout for side-by-side on desktop */}
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Form Section - Fixed width on desktop */}
+          <div className="lg:w-96 bg-white p-5 rounded-lg shadow-md border border-green-100">
             <h2 className="text-lg font-semibold mb-3 text-green-800 flex items-center">
               <svg className="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -102,10 +111,10 @@ export default function App() {
             <ExpenseForm onSubmit={handleAddExpense} />
           </div>
 
-          {/* Main Content - Now takes 3/5 of space */}
-          <div className="lg:col-span-3 space-y-4">
-            {/* Compact Search Bar */}
-            <div className="bg-white p-3 rounded-lg shadow-md border border-green-100">
+          {/* Table Section - Takes remaining space */}
+          <div className="flex-1">
+            {/* Search Bar */}
+            <div className="bg-white p-3 rounded-lg shadow-md border border-green-100 mb-4">
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <svg className="h-4 w-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -122,15 +131,17 @@ export default function App() {
               </div>
             </div>
 
-            {/* Enhanced Expense Table - Now larger */}
+            {/* Responsive Table Container */}
             <div className="bg-white rounded-lg shadow-md border border-green-100 overflow-hidden">
-              <ExpenseTable 
-                expenses={processedExpenses} 
-                onDelete={handleDeleteExpense}
-                onSort={handleSort}
-                sortConfig={sortConfig}
-                formatCurrency={formatCurrency}
-              />
+              <div className="overflow-x-auto">
+                <ExpenseTable 
+                  expenses={processedExpenses} 
+                  onDelete={handleDeleteExpense}
+                  onSort={handleSort}
+                  sortConfig={sortConfig}
+                  formatCurrency={formatCurrency}
+                />
+              </div>
             </div>
           </div>
         </div>
