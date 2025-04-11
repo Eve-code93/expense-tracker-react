@@ -6,7 +6,7 @@ const ExpenseForm = ({ onSubmit }) => {
     description: '',
     category: '',
     amount: '',
-    date: new Date().toLocaleDateString('en-US')
+    date: new Date().toLocaleDateString('en-GB')
   });
 
   const handleChange = (e) => {
@@ -17,20 +17,13 @@ const ExpenseForm = ({ onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!expense.name || !expense.amount || !expense.category) return;
-    
-    onSubmit({
-      ...expense,
-      amount: parseFloat(expense.amount),
-      date: expense.date || new Date().toLocaleDateString('en-US')
-    });
-    
-    // Reset form
+    onSubmit(expense);
     setExpense({
       name: '',
       description: '',
       category: '',
       amount: '',
-      date: new Date().toLocaleDateString('en-US')
+      date: new Date().toLocaleDateString('en-GB')
     });
   };
 
@@ -44,10 +37,9 @@ const ExpenseForm = ({ onSubmit }) => {
             name="name"
             value={expense.name}
             onChange={handleChange}
-            placeholder="Enter expense name"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            placeholder="e.g. KPLC Tokens"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
             required
-            aria-label="Expense name"
           />
         </div>
         <div>
@@ -56,11 +48,10 @@ const ExpenseForm = ({ onSubmit }) => {
             name="category"
             value={expense.category}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
             required
-            aria-label="Expense category"
           >
-            <option value="">Select a category</option>
+            <option value="">Select category</option>
             <option value="Food">Food</option>
             <option value="Transport">Transport</option>
             <option value="Shopping">Shopping</option>
@@ -77,10 +68,9 @@ const ExpenseForm = ({ onSubmit }) => {
           name="description"
           value={expense.description}
           onChange={handleChange}
-          placeholder="Enter description (optional)"
-          rows={3}
-          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-          aria-label="Expense description"
+          placeholder="Optional details"
+          rows={2}
+          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
         />
       </div>
       
@@ -88,18 +78,16 @@ const ExpenseForm = ({ onSubmit }) => {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Amount *</label>
           <div className="relative">
-            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">$</span>
+            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">Ksh</span>
             <input
               type="number"
               name="amount"
               value={expense.amount}
               onChange={handleChange}
-              placeholder="0.00"
-              className="w-full pl-8 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              placeholder="0"
+              className="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
               required
-              step="0.01"
               min="0"
-              aria-label="Expense amount"
             />
           </div>
         </div>
@@ -110,8 +98,7 @@ const ExpenseForm = ({ onSubmit }) => {
             name="date"
             value={expense.date}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            aria-label="Expense date"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
           />
         </div>
       </div>
@@ -125,16 +112,14 @@ const ExpenseForm = ({ onSubmit }) => {
             description: '',
             category: '',
             amount: '',
-            date: new Date().toLocaleDateString('en-US')
+            date: new Date().toLocaleDateString('en-GB')
           })}
-          aria-label="Reset form"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-          aria-label="Submit expense form"
+          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
         >
           Submit
         </button>

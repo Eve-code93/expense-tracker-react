@@ -1,96 +1,140 @@
 import { useState } from 'react';
-import ExpenseForm from './components/ExpenseForm.jsx';
-import ExpenseTable from './components/ExpenseTable.jsx';
+import ExpenseForm from './components/ExpenseForm';
+import ExpenseTable from './components/ExpenseTable';
 
-function App() {
-  const [expenses, setExpenses] = useState([
-    { id: 1, name: 'Ugail Matumbo', description: "Wednesday's Lunch", category: 'Food', amount: 15, date: '04/10/2024' },
-    { id: 2, name: 'KPLC tokens', description: 'power tokens', category: 'Utilities', amount: 50, date: '04/09/2024' },
-    { id: 3, name: 'Buy shoes', description: 'Add to my shoe collection', category: 'Shopping', amount: 80, date: '04/08/2024' },
-    { id: 4, name: 'Buy book', description: 'add to my book collection', category: 'Education', amount: 25, date: '04/07/2024' },
-    { id: 5, name: 'Pay Loan', description: 'bank loan repayment', category: 'Finance', amount: 200, date: '04/05/2024' },
-  ]);
+const initialExpenses = [
+  { id: 1, name: 'Ugali Matumbo', description: "Wednesday's Lunch", category: 'Food', amount: 1500, date: '10/04/2024' },
+  { id: 2, name: 'KPLC tokens', description: 'Electricity tokens', category: 'Utilities', amount: 5000, date: '09/04/2024' },
+  { id: 3, name: 'Shoes', description: 'New sneakers', category: 'Shopping', amount: 8000, date: '08/04/2024' },
+  { id: 4, name: 'Book', description: 'Programming book', category: 'Education', amount: 2500, date: '07/04/2024' },
+  { id: 5, name: 'M-Pesa Loan', description: 'Fuliza repayment', category: 'Finance', amount: 2000, date: '05/04/2024' },
+];
 
+export default function App() {
+  const [expenses, setExpenses] = useState(initialExpenses);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
+  const [sortConfig, setSortConfig] = useState({ 
+    key: null, 
+    direction: 'asc' 
+  });
 
-  const addExpense = (newExpense) => {
-    setExpenses([...expenses, { id: expenses.length + 1, ...newExpense }]);
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-KE', {
+      style: 'currency',
+      currency: 'KES',
+      minimumFractionDigits: 0
+    }).format(amount);
   };
 
-  const deleteExpense = (id) => {
-    setExpenses(expenses.filter(expense => expense.id !== id));
+  const handleAddExpense = (newExpense) => {
+    setExpenses(prev => [
+      ...prev,
+      {
+        id: Date.now(),
+        ...newExpense,
+        amount: parseFloat(newExpense.amount),
+        date: newExpense.date || new Date().toLocaleDateString('en-GB')
+      }
+    ]);
   };
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
+  const handleDeleteExpense = (id) => {
+    if (window.confirm('Are you sure you want to delete this expense?')) {
+      setExpenses(prev => prev.filter(expense => expense.id !== id));
+    }
   };
 
-  const requestSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value.toLowerCase());
+  };
+
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
     }
     setSortConfig({ key, direction });
   };
 
-  const sortedExpenses = () => {
-    let sortableExpenses = [...expenses];
-    if (sortConfig.key) {
-      sortableExpenses.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? 1 : -1;
-        }
-        return 0;
-      });
-    }
-    return sortableExpenses;
-  };
+  const processedExpenses = [...expenses]
+    .filter(expense => 
+      expense.name.toLowerCase().includes(searchTerm) || 
+      expense.description.toLowerCase().includes(searchTerm)
+    )
+    .sort((a, b) => {
+      if (!sortConfig.key) return 0;
+      
+      const aValue = a[sortConfig.key].toString().toLowerCase();
+      const bValue = b[sortConfig.key].toString().toLowerCase();
+      
+      if (aValue < bValue) {
+        return sortConfig.direction === 'asc' ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return sortConfig.direction === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
 
-  const filteredExpenses = sortedExpenses().filter(expense =>
-    expense.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    expense.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const totalExpenses = processedExpenses.reduce((sum, expense) => sum + expense.amount, 0);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">Expense Tracker</h1>
-        <p className="text-gray-600 mb-8">Start taking control of your finances and life. Record, categorize and analyze your spending.</p>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
+      <div className="max-w-7xl mx-auto"> {/* Increased max-width */}
+        <header className="mb-6 text-center">
+          <h1 className="text-3xl font-bold text-green-800 mb-1">PesaTracker</h1>
+          <p className="text-green-600 text-sm">Track your spending the Kenyan way</p>
+          <div className="mt-3 p-2 bg-white rounded-lg shadow-inner border border-green-100 inline-block">
+            <span className="font-medium text-gray-700">Total: </span>
+            <span className="font-bold text-green-700">{formatCurrency(totalExpenses)}</span>
+          </div>
+        </header>
 
-        {/* Side-by-side layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {/* Add Expense */}
-          <div>
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Add Expense</h2>
-            <ExpenseForm onAddExpense={addExpense} />
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6"> {/* Changed to 5-column grid */}
+          {/* Add Expense Form - Now takes 2/5 of space */}
+          <div className="lg:col-span-2 bg-white p-5 rounded-lg shadow-md border border-green-100">
+            <h2 className="text-lg font-semibold mb-3 text-green-800 flex items-center">
+              <svg className="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              Add Expense
+            </h2>
+            <ExpenseForm onSubmit={handleAddExpense} />
           </div>
 
-          {/* Search Expenses */}
-          <div>
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Search Expenses</h2>
-            <input
-              type="text"
-              placeholder="Search by name or description..."
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={searchTerm}
-              onChange={handleSearch}
-            />
+          {/* Main Content - Now takes 3/5 of space */}
+          <div className="lg:col-span-3 space-y-4">
+            {/* Compact Search Bar */}
+            <div className="bg-white p-3 rounded-lg shadow-md border border-green-100">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg className="h-4 w-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  className="block w-full pl-9 pr-3 py-2 text-sm border border-green-200 rounded-md bg-green-50 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
+                  placeholder="Search expenses..."
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                />
+              </div>
+            </div>
+
+            {/* Enhanced Expense Table - Now larger */}
+            <div className="bg-white rounded-lg shadow-md border border-green-100 overflow-hidden">
+              <ExpenseTable 
+                expenses={processedExpenses} 
+                onDelete={handleDeleteExpense}
+                onSort={handleSort}
+                sortConfig={sortConfig}
+                formatCurrency={formatCurrency}
+              />
+            </div>
           </div>
         </div>
-
-        <ExpenseTable
-          expenses={filteredExpenses}
-          onDelete={deleteExpense}
-          onSort={requestSort}
-          sortConfig={sortConfig}
-        />
       </div>
     </div>
   );
 }
-
-export default App;
