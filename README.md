@@ -1,58 +1,87 @@
-# 💸 Expense Tracker React App
+# 🇰🇪 PesaTracker - Kenyan Expense Manager
 
-A simple and minimal expense tracking application built with **React** and **Vite**.
 
-## 🚀 Features
+A modern expense tracker optimized for Kenyan users, featuring KES currency formatting and mobile-first design. Hosted on Vercel for fast performance.
 
-### ✅ Core Deliverables
-- Display a table of all expenses
-- Add a new expense using a form
-- Filter expenses by typing in a search bar
+##  Features
 
-### ✨ Advanced Features (Stretch Goals)
-- Sort expenses by category or description
-- Delete specific expenses from the list
+- **KES-First Design**
+  - Auto-formatting for Kenyan Shillings
+  - Localized date displays
+  - Kenyan-themed UI colors
 
-## 🛠 Tech Stack
+- **Smart Expense Management**
+  -  Real-time spending analytics
+  -  Instant search across all fields
+  -  Category-based organization
+  -  Mobile-optimized workflow
 
-- [React](https://reactjs.org/)
-- [Vite](https://vitejs.dev/)
-- [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-- [CSS Modules](https://github.com/css-modules/css-modules) (or your styling choice)
+- **Advanced Controls**
+  - One-click expense deletion
+  - Multi-column sorting
+  - Form validation
+  - Responsive data table
 
-## 📦 Getting Started
 
-### 1. Clone the Repo
+[![Vercel Deployment](https://expense-tracker-react-2gudj58w6-eve-code93s-projects.vercel.app/)
 
+
+## 🛠️ Tech Stack
+
+| Frontend       | Backend       | Utilities       |
+|----------------|---------------|-----------------|
+| React 19       | Vercel Hosting| Tailwind CSS    |
+| Vite           | GitHub Actions| date-fns        |
+| React Icons    |               | ESLint          |
+
+## 🖥️ Local Development
+
+1. **Clone the repo**
 ```bash
-git clone https://github.com/Eve-code93/expense-tracker-react.git
-cd expense-tracker-react
+git clone 
+cd expense-tracker
+Install dependencies
 
- Install Dependencies
 bash
 Copy
-Edit
 npm install
-3. Run the App
+Start dev server
+
 bash
 Copy
-Edit
 npm run dev
-Then open your browser and go to http://localhost:5173
+📦 Deployment
+This project automatically deploys to Vercel on every git push to main branch.
 
-🧱 Project Structure
-css
+Manual deployment:
+
+Install Vercel CLI:
+
+bash
 Copy
-Edit
-src/
-├── components/
-│   ├── ExpenseForm.jsx
-│   ├── ExpenseTable.jsx
-│   └── SearchBar.jsx
-├── App.jsx
-├── main.jsx
-└── index.css
-📌 Author
-Eve-code93 – GitHub
+npm install -g vercel
+Deploy:
 
-Feel free to fork, clone, and contribute!
+bash
+Copy
+vercel
+🎨 Customization
+To modify for other currencies:
+
+Update the formatter in src/utils/currency.js
+
+Change the currency symbol in ExpenseForm.jsx
+
+🤝 Contributing
+Fork the project
+
+Create your feature branch (git checkout -b feature/AmazingFeature)
+
+Commit your changes (git commit -m 'Add amazing feature')
+
+Push to the branch (git push origin feature/AmazingFeature)
+
+Open a Pull Request
+
+📜 License
+Distributed under the MIT License.
